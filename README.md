@@ -18,17 +18,17 @@ Package gotypes provides a helper function to parse Go types from source code.
 ## Usage
 
 ```go
-package gogotypes_test
+package main
 
 import (
 	"fmt"
 	"go/types"
 
-	"vimagination.zapto.org/gogotypes"
+	"vimagination.zapto.org/gotypes"
 )
 
-func Example() {
-	pkg, err := gogotypes.ParsePackage(".")
+func main() {
+	pkg, err := gotypes.ParsePackage(".")
 	if err != nil {
 		fmt.Println(err)
 

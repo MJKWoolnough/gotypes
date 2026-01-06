@@ -1,4 +1,4 @@
-module vimagination.zapto.org/types
+module vimagination.zapto.org/gotypes
 
 go 1.25.5
 

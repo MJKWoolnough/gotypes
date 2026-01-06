@@ -1,4 +1,5 @@
-package gotypes
+// Package gotypes provides a helper function to parse Go types from source code.
+package gotypes // import "vimagination.zapto.org/gotypes"
 
 import (
 	"archive/zip"
@@ -31,6 +32,11 @@ type filesystem interface {
 	ReadFile(name string) ([]byte, error)
 }
 
+// ParsePackage accepts a local path to a directory containing a Go module, and
+// returns a parsed Go Package.
+//
+// You can also provide a list of source files in that package to ignore in the
+// parsing process.
 func ParsePackage(modulePath string, ignore ...string) (*types.Package, error) {
 	var (
 		m  *moduleDetails

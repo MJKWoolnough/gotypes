@@ -14,6 +14,7 @@ Package gotypes provides a helper function to parse Go types from source code.
  - Simple parsing of Go source code to enable reading of type information.
  - Automatically handles dependencies, using local cache, stdlib, and remote Go mod proxy.
  - Optionally omit specific source code files from parsing.
+ - Helper funcs to simplify common tasks.
 
 ## Usage
 

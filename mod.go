@@ -7,12 +7,15 @@ import (
 	"golang.org/x/mod/module"
 )
 
+// ModFile represents a simplified view of a parsed go.mod file.
 type ModFile struct {
 	Module  string
 	Path    string
 	Imports map[string]module.Version
 }
 
+// ParseModFile parses the go.mod file found in the package specfied by the
+// given local path.
 func ParseModFile(path string) (*ModFile, error) {
 	return parseModFile(&osFS{os.DirFS(path).(statReadDirFileFS)}, path)
 }

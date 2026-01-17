@@ -157,7 +157,7 @@ replace golang.org/x/tools => somewhere.org/tools v0.1.0
 `,
 	}
 
-	if pkg, err := parseModFile(tfs, ""); err != nil {
+	if pkg, err := parseAndWrapModFile(tfs, ""); err != nil {
 		t.Errorf("unexpected error: %s", err)
 	} else if pkg.Module != "vimagination.zapto.org/marshal" {
 		t.Errorf("expecting path %q, got %q", "vimagination.zapto.org/marshal", pkg.Module)
@@ -209,7 +209,7 @@ replace vimagination.zapto.org/httpreaderat v1.0.0 => ../httpreaderat`,
 	httpreaderat := importDetails{Base: "../httpreaderat", Path: "."}
 	httpreaderatsub := importDetails{Base: "../httpreaderat", Path: "sub"}
 
-	if pkg, err := parseModFile(tfs, ""); err != nil {
+	if pkg, err := parseAndWrapModFile(tfs, ""); err != nil {
 		t.Errorf("unexpected error: %s", err)
 	} else if im := pkg.Resolve("unknown.com/pkg"); im != nil {
 		t.Errorf("expecting nil response, got %v", im)
@@ -242,7 +242,7 @@ func TestAsFS(t *testing.T) {
 
 	if f, err := cache.AsFS(); err != nil {
 		t.Errorf("unexpected error: %s", err)
-	} else if mf, err := parseModFile(f, ""); err != nil {
+	} else if mf, err := parseAndWrapModFile(f, ""); err != nil {
 		t.Errorf("unexpected error: %s", err)
 	} else if mf.Module != cache.Base {
 		t.Errorf("expecting path %q, got %q", cache.Base, mf.Module)

@@ -46,7 +46,7 @@ func ParsePackage(modulePath string, ignore ...string) (*types.Package, error) {
 	for path, sub := range splitPath(modulePath) {
 		var err error
 
-		if m, err = parseModFile(&osFS{os.DirFS(path).(statReadDirFileFS)}, path); err == nil {
+		if m, err = parseAndWrapModFile(&osFS{os.DirFS(path).(statReadDirFileFS)}, path); err == nil {
 			sd = sub
 
 			break
@@ -109,43 +109,22 @@ func listGoFiles(fsys filesystem) ([]string, error) {
 }
 
 type moduleDetails struct {
-	Module          string
-	Path            string
-	Imports         map[string]module.Version
+	*ModFile
 	fset            *token.FileSet
 	defaultImporter types.Importer
 	cache           map[string]*types.Package
 }
 
-func parseModFile(fsys filesystem, path string) (*moduleDetails, error) {
-	data, err := fsys.ReadFile("go.mod")
+func parseAndWrapModFile(fsys filesystem, path string) (*moduleDetails, error) {
+	modfile, err := parseModFile(fsys, path)
 	if err != nil {
 		return nil, err
-	}
-
-	f, err := modfile.Parse("go.mod", data, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	imports := make(map[string]module.Version, len(f.Require))
-
-	for _, r := range f.Require {
-		imports[r.Mod.Path] = r.Mod
-	}
-
-	for _, r := range f.Replace {
-		if m, ok := imports[r.Old.Path]; ok && (r.Old.Version == "" || r.Old.Version == m.Version) {
-			imports[r.Old.Path] = r.New
-		}
 	}
 
 	fset := token.NewFileSet()
 
 	return &moduleDetails{
-		Module:          f.Module.Mod.Path,
-		Path:            path,
-		Imports:         imports,
+		ModFile:         modfile,
 		fset:            fset,
 		defaultImporter: importer.ForCompiler(fset, runtime.Compiler, nil),
 		cache:           make(map[string]*types.Package),

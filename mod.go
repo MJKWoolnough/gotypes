@@ -16,8 +16,18 @@ type ModFile struct {
 
 // ParseModFile parses the go.mod file found in the package specfied by the
 // given local path.
-func ParseModFile(path string) (*ModFile, error) {
-	return parseModFile(&osFS{os.DirFS(path).(statReadDirFileFS)}, path)
+func ParseModFile(modulePath string) (*ModFile, error) {
+	var err error
+
+	for path := range splitPath(modulePath) {
+		var m *ModFile
+
+		if m, err = parseModFile(&osFS{os.DirFS(path).(statReadDirFileFS)}, path); err == nil {
+			return m, nil
+		}
+	}
+
+	return nil, err
 }
 
 func parseModFile(fsys filesystem, path string) (*ModFile, error) {

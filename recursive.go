@@ -2,6 +2,8 @@ package gotypes
 
 import "go/types"
 
+// IsTypeRecursive checks the type, and all referenced types, for a reference
+// back to itself.
 func IsTypeRecursive(typ types.Type) bool {
 	return isTypeRecursive(typ, map[types.Type]bool{})
 }

@@ -14,7 +14,21 @@ func isTypeRecursive(typ types.Type, found map[types.Type]bool) bool {
 
 	found[typ] = len(found) == 0
 
-	switch t := typ.Underlying().(type) {
+	switch t := typ.(type) {
+	case *types.Named:
+		if params := t.TypeParams(); params != nil {
+			if len(found) == 1 {
+				clear(found)
+			}
+
+			for param := range params.TypeParams() {
+				if isTypeRecursive(param.Constraint(), found) {
+					return true
+				}
+			}
+		}
+
+		return isTypeRecursive(t.Underlying(), found)
 	case *types.Struct:
 		for field := range t.Fields() {
 			if isTypeRecursive(field.Type(), found) {

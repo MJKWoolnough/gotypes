@@ -1,8 +1,6 @@
 package gotypes
 
 import (
-	"fmt"
-	"path"
 	"testing"
 )
 
@@ -23,12 +21,6 @@ func TestGetImports(t *testing.T) {
 	} {
 		if n := imps[path].Name(); n != name {
 			t.Errorf("expecting package %q to have name %q, got %q", path, name, n)
-		}
-	}
-
-	for p, pkg := range imps {
-		if path.Base(p) != pkg.Name() {
-			fmt.Println(p, pkg.Name())
 		}
 	}
 }

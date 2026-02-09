@@ -17,6 +17,8 @@ func isTypeRecursive(typ types.Type, found map[types.Type]bool) bool {
 	found[typ] = len(found) == 0
 
 	switch t := typ.(type) {
+	case *types.Alias:
+		return isTypeRecursive(t.Rhs(), found)
 	case *types.Named:
 		if params := t.TypeParams(); params != nil {
 			if len(found) == 1 {

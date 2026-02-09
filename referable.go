@@ -5,6 +5,10 @@ import (
 	"strings"
 )
 
+// IsTypeReferable is used to determine whether the given type is referable from
+// the given package.
+//
+// Type aliases are followed if the Alias is not referable.
 func IsTypeReferable(pkg *types.Package, t types.Type) bool {
 	return isTypeReferable(pkg, t, map[types.Type]struct{}{})
 }
